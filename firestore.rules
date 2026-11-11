@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check ownership
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // 2. Websites collection
+    match /websites/{websiteId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // 3. Site accounts (credentials metadata)
+    match /siteAccounts/{accountId} {
+      allow read, write: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
+    }
+
+    // 4. Documents collection
+    match /documents/{docId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // 5. Submissions collection
+    match /submissions/{submissionId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // 6. Publishing jobs collection
+    match /publishingJobs/{jobId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // 7. Submission events collection
+    match /submissionEvents/{eventId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // 8. Integrations collection
+    match /integrations/{integrationId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // 9. Activity logs collection
+    match /activityLogs/{logId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+  }
+}

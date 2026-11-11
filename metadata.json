@@ -1,0 +1,6 @@
+{
+  "name": "GuestPost Hub - Simple Batch Publisher",
+  "description": "Streamlined batch guest post submission and publishing manager with automated CMS detection, Google Docs import, live verification, and Google Sheets synchronization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
